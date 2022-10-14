@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+{% block title %}
+  Главная страница Yatube
+{% endblock %}
+{% block title_list %}
+<h1>Последние обновления</h1>
+{% endblock %}
+{% block content %}
+{% include 'includes/switcher.html' %}
+  <main>
+    <div>
+      {% for post in page_obj %}
+      {% include 'includes/for_obj.html' %}
+      {% endfor %}
+      {% include 'includes/paginator.html' %}
+    </div>
+  </main>
+{% endblock %}
