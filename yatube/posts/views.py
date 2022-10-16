@@ -32,13 +32,8 @@ def follow_index(request):
 def profile_follow(request, username):
     post_author = get_object_or_404(User, username=username)
     follower = request.user
-    count_follow = Follow.objects.filter(
-        user=request.user,
-        author=post_author,
-    ).count()
-    print(count_follow)
-    if request.user != post_author and count_follow < 1:
-        Follow.objects.create(
+    if request.user != post_author:
+        Follow.objects.get_or_create(
             user=follower,
             author=post_author,
         )
@@ -97,7 +92,6 @@ def post_detail(request, post_id):
 
 @login_required
 def post_create(request):
-
     if request.method == 'POST':
         form = PostForm(
             request.POST,

@@ -81,5 +81,8 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        unique_together = ['user', 'author']
+
     def __str__(self):
         return f'{self.user} подписан на {self.author}'

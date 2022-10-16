@@ -1,5 +1,5 @@
 from ..forms import PostForm
-from ..models import Post, Group
+from ..models import Post, Group, Comment
 
 from django.conf import settings
 from django.urls import reverse
@@ -15,10 +15,9 @@ TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
-class PostCreateFormTest(TestCase):
+class PostCreateFormTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-
         super().setUpClass()
         cls.user = User.objects.create_user(username='author')
         cls.group = Group.objects.create(
@@ -85,6 +84,35 @@ class PostCreateFormTest(TestCase):
             ).exists()
         )
 
+    def test_image_in_create(self):
+
+        test_video = (
+            b'test_video'
+        )
+        uploaded = SimpleUploadedFile(
+            name='test_video.mp4',
+            content=test_video,
+            content_type='video/mp4',
+        )
+
+        data_form = {
+            'text': 'Тестовый текст_3',
+            'group': self.group.pk,
+            'image': uploaded,
+        }
+
+        response = self.author_client.post(
+            reverse('posts:post_create'),
+            data=data_form,
+            follow=True,
+        )
+        self.assertFormError(
+            response, 'form', 'image', 'Загрузите правильное изображение. '
+                                       'Файл, который вы загрузили, '
+                                       'поврежден или не является '
+                                       'изображением.'
+        )
+
     def test_edit_post(self):
 
         post_count = Post.objects.count()
@@ -122,3 +150,61 @@ class PostCreateFormTest(TestCase):
         )
 
         self.assertEqual(Post.objects.count(), post_count)
+
+
+class CommentCreateFormTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.auth = User.objects.create(username='auth')
+        cls.author = User.objects.create(username='author')
+        cls.text = {
+            'text': 'Тестовый комментарий'
+        }
+        cls.group = Group.objects.create(
+            title='Тестовая группа_1',
+            slug='test-slug',
+        )
+        cls.post = Post.objects.create(
+            author=cls.author,
+            text='Тестовый текст',
+            group=cls.group,
+        )
+
+    def setUp(self):
+        self.auth_client = Client()
+        self.auth_client.force_login(self.auth)
+
+    def test_create_comment(self):
+        count = Post.objects.get(pk=self.post.pk).comments.count()
+
+        self.auth_client.post(
+            reverse('posts:add_comment', kwargs={'post_id': self.post.pk}),
+            data=self.text,
+        )
+
+        self.assertEqual(
+            Post.objects.get(pk=self.post.pk).comments.count(), count + 1)
+
+    def test_redirect_after_comment(self):
+        response = self.auth_client.post(
+            reverse('posts:add_comment', kwargs={'post_id': self.post.pk}),
+            data=self.text,
+        )
+
+        self.assertRedirects(
+            response, reverse('posts:post_detail',
+                              kwargs={'post_id': self.post.pk})
+        )
+
+    def test_check_context_comment(self):
+        self.auth_client.post(
+            reverse('posts:add_comment', kwargs={'post_id': self.post.pk}),
+            data=self.text,
+        )
+
+        self.assertTrue(
+            Comment.objects.filter(
+                text=self.text.get('text'),
+            ).exists()
+        )

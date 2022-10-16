@@ -1,6 +1,7 @@
 from django.core.cache import cache
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from ..models import Post, Group
 
@@ -43,6 +44,9 @@ class URLTests(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
+        cls.guest_client = Client()
+        cls.author_client = Client()
+        cls.authorized_client = Client()
         cls.author = User.objects.create_user(username='auth')
         cls.authorized = User.objects.create_user(username='authorized')
         cls.group = Group.objects.create(
@@ -57,10 +61,8 @@ class URLTests(TestCase):
         )
 
     def setUp(self) -> None:
-        self.guest_client = Client()
-        self.author_client = Client()
+        cache.clear()
         self.author_client.force_login(self.author)
-        self.authorized_client = Client()
         self.authorized_client.force_login(self.authorized)
 
     def test_urls_uses_correct_template(self):
@@ -139,3 +141,59 @@ class URLTests(TestCase):
         )
         self.assertEqual(response_get.status_code, 404)
         self.assertEqual(response_post.status_code, 404)
+
+    def test_access_to_follow(self):
+        response_auth = self.authorized_client.get(reverse(
+            'posts:profile_follow',
+            kwargs={'username': self.author})
+        )
+        response_guest = self.guest_client.get(reverse(
+            'posts:profile_follow',
+            kwargs={'username': self.author})
+        )
+
+        response_author = self.author_client.get(reverse(
+            'posts:profile_follow',
+            kwargs={'username': self.author})
+        )
+
+        self.assertRedirects(
+            response_auth,
+            reverse('posts:profile', kwargs={'username': self.author})
+        )
+        self.assertRedirects(
+            response_author,
+            reverse('posts:profile', kwargs={'username': self.author})
+        )
+        self.assertRedirects(
+            response_guest,
+            '/auth/login/?next=/profile/auth/follow',
+        )
+
+    def test_access_comment(self):
+        response_auth = self.authorized_client.get(reverse(
+            'posts:add_comment',
+            kwargs={'post_id': self.post.pk})
+        )
+        response_guest = self.guest_client.get(reverse(
+            'posts:add_comment',
+            kwargs={'post_id': self.post.pk})
+        )
+
+        response_author = self.author_client.get(reverse(
+            'posts:add_comment',
+            kwargs={'post_id': self.post.pk})
+        )
+
+        self.assertRedirects(
+            response_auth,
+            reverse('posts:post_detail', kwargs={'post_id': self.post.pk})
+        )
+        self.assertRedirects(
+            response_author,
+            reverse('posts:post_detail', kwargs={'post_id': self.post.pk})
+        )
+        self.assertRedirects(
+            response_guest,
+            '/auth/login/?next=/posts/1/comment',
+        )
