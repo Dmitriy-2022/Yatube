@@ -6,9 +6,9 @@
 <h1>Последние обновления</h1>
 {% endblock %}
 {% block content %}
-{% include 'includes/switcher.html' %}
   <main>
     <div>
+      {% include 'includes/switcher.html' %}
       {% for post in page_obj %}
       {% include 'includes/for_obj.html' %}
       {% endfor %}

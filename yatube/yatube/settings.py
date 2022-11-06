@@ -3,7 +3,7 @@ import os
 CSRF_FAILURE_VIEW = 'core.views.csrf_failure_403'
 
 NUMB_POST: int = 10
-NUMB_PAGIN: int = 20
+NUMB_PAGIN: int = 10
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,7 +21,11 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '[::1]',
     'testserver',
+    'www.peace2022.pythonanywhere.com',
+    'peace2022.pythonanywhere.com',
 ]
+
+
 
 # Application definition
 
@@ -37,6 +41,7 @@ INSTALLED_APPS = [
     'posts.apps.PostsConfig',
     'users.apps.UsersConfig',
     'sorl.thumbnail',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
@@ -137,3 +143,7 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

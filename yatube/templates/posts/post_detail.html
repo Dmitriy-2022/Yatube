@@ -17,24 +17,24 @@
       <div class="row">
         <aside class="col-12 col-md-3">
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">
+            <li class="list-group-item" style="background-color: rgb(177, 206, 211)">
               Дата публикации: {{ post.pub_date|date:"d E Y" }} 
             </li>
             {% if post.group %}
-            <li class="list-group-item">
+            <li class="list-group-item" style="background-color: rgb(177, 206, 211)">
               Группа: {{ post.group }} <br>
               <a href="{% url 'posts:group_list' post.group.slug %}">
                 все записи группы
               </a>
             {% endif %}
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item" style="background-color: rgb(177, 206, 211)">
               Автор: {{ post.author.get_full_name }}
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: rgb(177, 206, 211)">
               Всего постов автора:  {{ post.author.posts.count }}
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item" style="background-color: rgb(177, 206, 211)">
               <a href="{% url 'posts:profile' post.author.username %}">
                 все посты пользователя
               </a>

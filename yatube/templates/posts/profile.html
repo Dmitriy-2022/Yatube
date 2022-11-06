@@ -3,7 +3,7 @@
   <head>  
     {% extends 'base.html' %}
     {% block title %}
-        Профайл пользователя {{ posts_author.get_full_name }}
+        <small>Профайл пользователя {{ posts_author.get_full_name }}</small>
     {% endblock %}
     {% block title_list %}
     {% endblock %}
@@ -12,8 +12,8 @@
   <body>       
     <main>
       <div class="mb-5">
-        <h1>Все посты пользователя {{ posts_author.get_full_name }}</h1>
-        <h3>Всего постов: {{ posts_author.posts.count }}</h3>
+        <h3>Все посты пользователя {{ posts_author.get_full_name }}</h3>
+        <h5>Всего постов: {{ posts_author.posts.count }}</h5>
         {% if request.user != posts_author %}
           {% if following %}
             <a

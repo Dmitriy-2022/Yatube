@@ -5,16 +5,16 @@
 <main>
     <div class="container py-5">
       <div class="row justify-content-center">
-        <div class="col-md-8 p-5">
+        <div class="col-md-10 p-5">
           <div class="card">
-            <div class="card-header">  
+            <div class="card-header" style="background-color: rgb(71, 119, 127)">  
               {% if is_edit %}
                 Редактировать пост
               {% else %}
                 Новый пост
               {% endif %}                
             </div>
-            <div class="card-body">
+            <div class="card-body" style="background-color: rgb(127, 175, 183)">
               {% load user_filters %}   
               {% if is_edit %}  
                 <form method="post" action="{% url 'posts:post_edit' post.pk %}" enctype="multipart/form-data">
