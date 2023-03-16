@@ -14,9 +14,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'y^wsmqrtt_1m$gj)5ux@j&x4f81hgns^fq(n%*vbru2vz29kwy'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
+    '84.252.143.128',
     'localhost',
     '127.0.0.1',
     '[::1]',
@@ -129,7 +130,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+    ]
+
+# Место, куда collectstatic будет собирать всю статику с проекта (пройдет все дериктории и будет искать в них статику)
+STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:index'
