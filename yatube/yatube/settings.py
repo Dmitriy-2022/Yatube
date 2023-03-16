@@ -131,11 +131,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'collect_static')
     ]
 
 # Место, куда collectstatic будет собирать всю статику с проекта (пройдет все дериктории и будет искать в них статику)
-STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:index'
