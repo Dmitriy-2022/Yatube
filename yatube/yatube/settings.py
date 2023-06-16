@@ -1,19 +1,16 @@
 import os
+from dotenv import load_dotenv
 
 CSRF_FAILURE_VIEW = 'core.views.csrf_failure_403'
 
 NUMB_POST: int = 10
 NUMB_PAGIN: int = 10
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'y^wsmqrtt_1m$gj)5ux@j&x4f81hgns^fq(n%*vbru2vz29kwy'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = [
@@ -77,20 +74,12 @@ ROOT_URLCONF = 'yatube.urls'
 
 WSGI_APPLICATION = 'yatube.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -107,10 +96,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
-
 LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
@@ -121,19 +106,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'collect_static')
-    ]
-
+]
 # Место, куда collectstatic будет собирать всю статику с проекта (пройдет все дериктории и будет искать в них статику)
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
